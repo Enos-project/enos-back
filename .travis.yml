@@ -1,0 +1,14 @@
+language: java
+sudo: true
+dist: trusty
+jdk: oraclejdk9
+addons:
+  apt:
+    packages:
+      - oracle-java9-installer
+services:
+  - mysql
+before_install:
+  - chmod +x mvnw
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS enos;'  
+  - mysql -u root --default-character-set=utf8 enos < sql/enos.sql
