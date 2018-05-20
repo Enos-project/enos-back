@@ -1,0 +1,28 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "enos",
+                "projectName": "enos",
+                "workingDirectory": "d:\\w\\others\\e-nos-back",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "enos",
+                "projectName": "enos",
+                "workingDirectory": "d:\\w\\others\\e-nos-back",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
