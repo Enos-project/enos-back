@@ -216,7 +216,7 @@ if $cygwin; then
     MAVEN_PROJECTBASEDIR=`cygpath --path --windows "$MAVEN_PROJECTBASEDIR"`
 fi
 
-WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
+WRAPPER_LAUNCHER=com.enos.enos.EnosApplication
 
 exec "$JAVACMD" \
   $MAVEN_OPTS \
