@@ -11,4 +11,4 @@ services:
 before_install:
   - chmod +x mvnw
   - mysql -e 'CREATE DATABASE IF NOT EXISTS enos;'  
-  - mysql -u root --default-character-set=utf8 baladay < sql/enos.sql
+  - mysql -u root --default-character-set=utf8 enos < sql/enos.sql
