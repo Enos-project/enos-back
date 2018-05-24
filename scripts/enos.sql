@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  Dim 20 mai 2018 à 22:54
+-- Généré le :  jeu. 24 mai 2018 à 20:00
 -- Version du serveur :  10.1.25-MariaDB
 -- Version de PHP :  7.1.7
 
@@ -34,7 +34,8 @@ CREATE TABLE `application` (
   `description` text NOT NULL,
   `current_version` varchar(10) NOT NULL,
   `default_application` binary(1) NOT NULL DEFAULT '\0',
-  `icon_id` int(20) NOT NULL
+  `icon_id` int(20) NOT NULL,
+  `publisher` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

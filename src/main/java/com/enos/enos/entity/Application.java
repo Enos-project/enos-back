@@ -25,13 +25,15 @@ public class Application {
 
     private boolean defaultApplication;
 
+    private String publisher;
+
     @Nullable
     @OneToOne
     private File icon;
 
     public Application() {}
 
-    public Application(long id, String name, String description, String currentVersion, boolean defaultApplication, File icon) {
+    public Application(long id, String name, String description, String currentVersion, boolean defaultApplication, File icon, String publisher) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -82,5 +84,13 @@ public class Application {
 
     public void setIcon(File icon) {
         this.icon = icon;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 }
