@@ -40,6 +40,7 @@ public class Application {
         this.currentVersion = currentVersion;
         this.defaultApplication = defaultApplication;
         this.icon = icon;
+        this.publisher = publisher;
     }
 
     public long getId() {
