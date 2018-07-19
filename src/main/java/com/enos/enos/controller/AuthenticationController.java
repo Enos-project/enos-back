@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
@@ -20,6 +20,9 @@ import com.enos.enos.entity.User;
 import com.enos.enos.repository.UserRepository;
 import com.enos.enos.utils.AuthenticationUtils;
 
+import com.enos.enos.pojo.LoginInPojo;
+import com.enos.enos.pojo.LoginOutPojo;
+
 @CrossOrigin(origins = "http://localhost", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
@@ -29,24 +32,30 @@ public class AuthenticationController {
     private UserRepository userRepository;
     
     @PostMapping(value = "/login")
-	public ResponseEntity<String> login(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) throws ServletException {
+	public ResponseEntity<LoginOutPojo> login(@RequestBody LoginInPojo loginInPojo) throws ServletException {
+		LoginOutPojo loginOutPojo = new LoginOutPojo();
 
-		User user = userRepository.findByUsername(username);
+		User user = userRepository.findByUsername(loginInPojo.getUsername());
 
 		if(user == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		String encryptedPassword = AuthenticationUtils.getEncryptedPassword(password, user.getSalt());
+		String encryptedPassword = AuthenticationUtils.getEncryptedPassword(loginInPojo.getPassword(), user.getSalt());
 		String encryptedUserPassword = user.getPassword();
 
 		if (!encryptedPassword.equals(encryptedUserPassword)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		String jwtToken = Jwts.builder().setSubject(username).claim("roles", "user").setIssuedAt(new Date())
+		String jwtToken = Jwts.builder().setSubject(loginInPojo.getUsername()).claim("roles", "user").setIssuedAt(new Date())
 			.signWith(SignatureAlgorithm.HS256, "secretkey").compact();
 
-		return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+		loginOutPojo.setToken(jwtToken);
+		loginOutPojo.setId(user.getId());
+		loginOutPojo.setFirstname(user.getFirstname());
+		loginOutPojo.setLastname(user.getLastname());
+
+		return new ResponseEntity<>(loginOutPojo, HttpStatus.OK);
 	}
 }

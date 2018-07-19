@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.enos.enos.entity.Application;
 import com.enos.enos.entity.Installation;
 import com.enos.enos.entity.User;
+import com.enos.enos.entity.enums.EApplicationType;
 import com.enos.enos.repository.ApplicationRepository;
 import com.enos.enos.repository.InstallationRepository;
 import com.enos.enos.repository.UserRepository;
@@ -58,6 +59,18 @@ public class ApplicationController {
         List<Installation> installationList = installationRepository.findByUser(user.get());
 
         List<Application> applicationList = installationList.stream().map(installation -> installation.getApplication()).collect(Collectors.toList());
+
+        if(applicationList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(applicationList, HttpStatus.OK);
+    }
+
+    @GetMapping("/type/{applicationType}")
+    public ResponseEntity<List<Application>> getApplicationsByType(@PathVariable(value = "applicationType") EApplicationType type) {
+
+        List<Application> applicationList = applicationRepository.findByType(type.toString());
 
         if(applicationList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
