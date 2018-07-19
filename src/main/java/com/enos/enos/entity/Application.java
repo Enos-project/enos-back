@@ -2,12 +2,16 @@ package com.enos.enos.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.lang.Nullable;
+
+import com.enos.enos.entity.enums.EApplicationType;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -31,9 +35,12 @@ public class Application {
     @OneToOne
     private File icon;
 
+    @Enumerated(EnumType.STRING)
+    private EApplicationType type;
+
     public Application() {}
 
-    public Application(long id, String name, String description, String currentVersion, boolean defaultApplication, File icon, String publisher) {
+    public Application(long id, String name, String description, String currentVersion, boolean defaultApplication, File icon, String publisher, EApplicationType type) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -41,6 +48,7 @@ public class Application {
         this.defaultApplication = defaultApplication;
         this.icon = icon;
         this.publisher = publisher;
+        this.type = type;
     }
 
     public long getId() {
@@ -93,5 +101,13 @@ public class Application {
 
     public void setPublisher(String publisher) {
         this.publisher = publisher;
+    }
+
+    public EApplicationType getType() {
+        return type;
+    }
+
+    public void setType(EApplicationType type) {
+        this.type = type;
     }
 }

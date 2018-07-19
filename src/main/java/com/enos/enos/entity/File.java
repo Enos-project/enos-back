@@ -56,6 +56,7 @@ public class File {
 
     public File(long id, EFileType type, String content) {
         this.id = id;
+        this.type = type;
         this.content = content;
     }
 
