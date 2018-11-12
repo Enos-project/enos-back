@@ -79,6 +79,18 @@ CREATE TABLE `installation` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `log`
+--
+
+CREATE TABLE `log` (
+  `id` int(20) NOT NULL,
+  `installation` int(20) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `content` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+--
 -- Structure de la table `param`
 --
 
@@ -196,6 +208,13 @@ ALTER TABLE `installation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_installation_user` (`user`),
   ADD KEY `FK_installation_application` (`application`);
+
+--
+-- Index pour la table `log`
+--
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_log_installation` (`installation`);
 
 --
 -- Index pour la table `param`
@@ -324,6 +343,12 @@ ALTER TABLE `application_static_file`
 ALTER TABLE `installation`
   ADD CONSTRAINT `FK_installation_application` FOREIGN KEY (`application`) REFERENCES `application` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_installation_user` FOREIGN KEY (`user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `log`
+--
+ALTER TABLE `log`
+  ADD CONSTRAINT `FK_log_installation` FOREIGN KEY (`installation`) REFERENCES `installation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `param`

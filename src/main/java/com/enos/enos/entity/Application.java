@@ -6,8 +6,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Set;
+import java.util.HashSet;
 
 import org.springframework.lang.Nullable;
 
@@ -37,6 +42,14 @@ public class Application {
 
     @Enumerated(EnumType.STRING)
     private EApplicationType type;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "application")
+    private Set<Setting> settings = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "application")
+    private Set<ApplicationStaticFile> applicationStaticFiles = new HashSet<>();
 
     public Application() {}
 
@@ -109,5 +122,13 @@ public class Application {
 
     public void setType(EApplicationType type) {
         this.type = type;
+    }
+
+    public Set<Setting> getSettings() {
+        return settings;
+    }
+
+    public Set<ApplicationStaticFile> getApplicationStaticFiles() {
+        return applicationStaticFiles;
     }
 }

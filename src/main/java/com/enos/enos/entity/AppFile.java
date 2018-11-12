@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class UserApplicationFile {
+public class AppFile {
 
     @Id
     @GeneratedValue
@@ -19,21 +19,16 @@ public class UserApplicationFile {
 
     @JsonIgnore
     @ManyToOne
-    private User user;
-
-    @JsonIgnore
-    @ManyToOne
-    private Application application;
+    private Installation installation;
 
     @OneToOne
     private File file;
 
-    public UserApplicationFile() {}
+public AppFile() {}
 
-    public UserApplicationFile(long id, User user, Application application, File file) {
+    public AppFile(long id, Installation installation, File file) {
         this.id = id;
-        this.user = user;
-        this.application = application;
+        this.installation = installation;
         this.file = file;
     }
 
@@ -41,20 +36,12 @@ public class UserApplicationFile {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Installation getInstallation() {
+        return installation;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
+    public void setInstallation(Installation installation) {
+        this.installation = installation;
     }
 
     public File getFile() {

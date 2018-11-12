@@ -18,16 +18,16 @@ public class SettingValue {
 
     @JsonIgnore
     @ManyToOne
-    private User user;
+    private Installation installation;
 
     @ManyToOne
     private SettingAttribute settingAttribute;
 
     public SettingValue() {}
 
-    public SettingValue(long id, User user, SettingAttribute settingAttribute) {
+    public SettingValue(long id, Installation installation, SettingAttribute settingAttribute) {
         this.id = id;
-        this.user = user;
+        this.installation = installation;
         this.settingAttribute = settingAttribute;
     }
 
@@ -35,12 +35,12 @@ public class SettingValue {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Installation getInstallation() {
+        return installation;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setInstallation(Installation installation) {
+        this.installation = installation;
     }
 
     public SettingAttribute getSettingAttribute() {

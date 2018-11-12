@@ -50,7 +50,7 @@ public class File {
     @JsonIgnore
     @Nullable
     @OneToOne(mappedBy = "file")
-    private UserApplicationFile userApplicationFile;
+    private AppFile appFile;
 
     public File() {}
 
@@ -96,7 +96,7 @@ public class File {
         return applicationStaticFile;
     }
 
-    public UserApplicationFile getUserApplicationFile() {
-        return userApplicationFile;
+    public AppFile getAppFile() {
+        return appFile;
     }
 }

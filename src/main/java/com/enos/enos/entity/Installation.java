@@ -4,11 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -29,6 +32,22 @@ public class Installation {
     private String installedVersion;
 
     private Date installationDate;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "installation")
+    private Set<Log> logs = new HashSet<>();
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "installation")
+    private Set<SettingValue> settingValues = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "installation")
+    private Set<Param> params = new HashSet<>();
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "installation")
+    private Set<AppFile> appFiles = new HashSet<>();
 
     public Installation() {}
 
@@ -74,5 +93,21 @@ public class Installation {
 
     public void setInstallationDate(Date installationDate) {
         this.installationDate = installationDate;
+    }
+
+    public Set<SettingValue> getSettingValues() {
+        return settingValues;
+    }
+
+    public Set<Param> getParams() {
+        return params;
+    }
+
+    public Set<Log> getLogs() {
+        return logs;
+    }
+    
+    public Set<AppFile> getAppFiles() {
+        return appFiles;
     }
 }

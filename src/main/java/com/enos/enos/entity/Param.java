@@ -20,11 +20,7 @@ public class Param {
 
     @JsonIgnore
     @ManyToOne
-    private Application application;
-
-    @JsonIgnore
-    @ManyToOne
-    private User user;
+    private Installation installation;
 
     @JsonIgnore
     @OneToOne
@@ -38,10 +34,9 @@ public class Param {
 
     public Param() {}
 
-    public Param(long id, Application application, User user, String key, String value, File file) {
+    public Param(long id, Installation installation, String key, String value, File file) {
         this.id = id;
-        this.application = application;
-        this.user = user;
+        this.installation = installation;
         this.key = key;
         this.value = value;
         this.file = file;
@@ -51,20 +46,12 @@ public class Param {
         return id;
     }
 
-    public Application getApplication() {
-        return application;
+    public Installation getInstallation() {
+        return installation;
     }
 
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setInstallation(Installation installation) {
+        this.installation = installation;
     }
 
     public String getKey() {

@@ -54,19 +54,7 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private Set<SettingValue> settingValues = new HashSet<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private Set<Param> params = new HashSet<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
     private Set<Installation> installations = new HashSet<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private Set<UserApplicationFile> userApplicationFiles = new HashSet<>();
 
     public User() {}
 
@@ -169,20 +157,7 @@ public class User {
         this.plan = plan;
     }
 
-    public Set<SettingValue> getSettingValues() {
-        return settingValues;
-    }
-
-    public Set<Param> getParams() {
-        return params;
-    }
-
     public Set<Installation> getInstallations() {
         return installations;
     }
-
-    public Set<UserApplicationFile> getUserApplicationFiles() {
-        return userApplicationFiles;
-    }
-
 }

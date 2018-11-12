@@ -2,6 +2,7 @@ package com.enos.enos.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.enos.enos.entity.Application;
 import com.enos.enos.entity.Installation;
@@ -9,6 +10,8 @@ import com.enos.enos.entity.User;
 import com.enos.enos.repository.ApplicationRepository;
 import com.enos.enos.repository.InstallationRepository;
 import com.enos.enos.repository.UserRepository;
+import com.enos.enos.utils.PojoTransformer;
+import com.enos.enos.pojo.entity.InstallationPojo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +37,7 @@ public class InstallationController {
     private ApplicationRepository applicationRepository;
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Installation>> getInstallationsForUser(@PathVariable(value = "userId") long userId) {
+    public ResponseEntity<List<InstallationPojo>> getInstallationsForUser(@PathVariable(value = "userId") long userId) {
 
         Optional<User> user = userRepository.findById(userId);
 
@@ -48,7 +51,9 @@ public class InstallationController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(installationList, HttpStatus.OK);
+        List<InstallationPojo> installationPojoList = installationList.stream().map(PojoTransformer::getInstallationPojoFromInstallation).collect(Collectors.toList());
+
+        return new ResponseEntity<>(installationPojoList, HttpStatus.OK);
     }
 
     @GetMapping("/isintalled/user/{userId}/application/{applicationId}")
@@ -68,7 +73,7 @@ public class InstallationController {
     }
 
     @GetMapping("/user/{userId}/application/{applicationId}")
-    public ResponseEntity<Installation> getInstallation(@PathVariable(value = "userId") long userId,
+    public ResponseEntity<InstallationPojo> getInstallation(@PathVariable(value = "userId") long userId,
         @PathVariable(value = "applicationId") long applicationId) {
 
         Optional<User> user = userRepository.findById(userId);
@@ -84,6 +89,6 @@ public class InstallationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(installation.get(), HttpStatus.OK);
+        return new ResponseEntity<>(PojoTransformer.getInstallationPojoFromInstallation(installation.get()), HttpStatus.OK);
     }
 }

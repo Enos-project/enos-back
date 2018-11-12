@@ -11,6 +11,8 @@ import com.enos.enos.entity.enums.EApplicationType;
 import com.enos.enos.repository.ApplicationRepository;
 import com.enos.enos.repository.InstallationRepository;
 import com.enos.enos.repository.UserRepository;
+import com.enos.enos.utils.PojoTransformer;
+import com.enos.enos.pojo.entity.ApplicationPojo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,7 @@ public class ApplicationController {
     private UserRepository userRepository;
 
     @GetMapping("/{applicationId}")
-    public ResponseEntity<Application> getApplication(@PathVariable(value = "applicationId") long applicationId) {
+    public ResponseEntity<ApplicationPojo> getApplication(@PathVariable(value = "applicationId") long applicationId) {
         
         Optional<Application> application = applicationRepository.findById(applicationId);
 
@@ -44,11 +46,11 @@ public class ApplicationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(application.get(), HttpStatus.OK);
+        return new ResponseEntity<>(PojoTransformer.getApplicationPojoFromApplication(application.get()), HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Application>> getInstalledApplications(@PathVariable(value = "userId") long userId) {
+    public ResponseEntity<List<ApplicationPojo>> getInstalledApplications(@PathVariable(value = "userId") long userId) {
 
         Optional<User> user = userRepository.findById(userId);
 
@@ -64,11 +66,13 @@ public class ApplicationController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(applicationList, HttpStatus.OK);
+        List<ApplicationPojo> applicationPojoList = applicationList.stream().map(PojoTransformer::getApplicationPojoFromApplication).collect(Collectors.toList());
+
+        return new ResponseEntity<>(applicationPojoList, HttpStatus.OK);
     }
 
     @GetMapping("/type/{applicationType}")
-    public ResponseEntity<List<Application>> getApplicationsByType(@PathVariable(value = "applicationType") EApplicationType type) {
+    public ResponseEntity<List<ApplicationPojo>> getApplicationsByType(@PathVariable(value = "applicationType") EApplicationType type) {
 
         List<Application> applicationList = applicationRepository.findByType(type.toString());
 
@@ -76,6 +80,8 @@ public class ApplicationController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(applicationList, HttpStatus.OK);
+        List<ApplicationPojo> applicationPojoList = applicationList.stream().map(PojoTransformer::getApplicationPojoFromApplication).collect(Collectors.toList());
+
+        return new ResponseEntity<>(applicationPojoList, HttpStatus.OK);
     }
 }

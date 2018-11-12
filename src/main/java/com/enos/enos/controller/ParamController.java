@@ -2,13 +2,18 @@ package com.enos.enos.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.enos.enos.entity.Application;
+import com.enos.enos.entity.Installation;
 import com.enos.enos.entity.Param;
 import com.enos.enos.entity.User;
 import com.enos.enos.repository.ApplicationRepository;
+import com.enos.enos.repository.InstallationRepository;
 import com.enos.enos.repository.ParamRepository;
 import com.enos.enos.repository.UserRepository;
+import com.enos.enos.utils.PojoTransformer;
+import com.enos.enos.pojo.entity.ParamPojo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,10 +36,13 @@ public class ParamController {
     private UserRepository userRepository;
 
     @Autowired
+    private InstallationRepository installationRepository;
+
+    @Autowired
     private ApplicationRepository applicationRepository;
 
     @GetMapping("/user/{userId}/application/{applicationId}")
-    public ResponseEntity<List<Param>> getParamsForUserAndApplication(@PathVariable(value = "userId") long userId, 
+    public ResponseEntity<List<ParamPojo>> getParamsForUserAndApplication(@PathVariable(value = "userId") long userId, 
         @PathVariable(value = "applicationId") long applicationId) {
 
         Optional<User> user = userRepository.findById(userId);
@@ -44,17 +52,25 @@ public class ParamController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        List<Param> paramList = paramRepository.findByUserAndApplication(user.get(), application.get());
+        Optional<Installation> installation = installationRepository.findByUserAndApplication(user.get(), application.get());
+
+        if(!installation.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        List<Param> paramList = paramRepository.findByInstallation(installation.get());
 
         if(paramList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         
-        return new ResponseEntity<>(paramList, HttpStatus.OK);
+        List<ParamPojo> paramPojoList = paramList.stream().map(PojoTransformer::getParamPojoFromParam).collect(Collectors.toList());
+
+        return new ResponseEntity<>(paramPojoList, HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}/application/{applicationId}/key/{key}")
-    public ResponseEntity<Param> getParamForUserAndApplicationAndParamKey(@PathVariable(value = "userId") long userId,
+    public ResponseEntity<ParamPojo> getParamForUserAndApplicationAndParamKey(@PathVariable(value = "userId") long userId,
         @PathVariable(value = "applicationId") long applicationId, @PathVariable(value = "key") String key) {
 
         Optional<User> user = userRepository.findById(userId);
@@ -64,12 +80,18 @@ public class ParamController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Param param = paramRepository.findByUserAndApplicationAndKey(user.get(), application.get(), key);
+        Optional<Installation> installation = installationRepository.findByUserAndApplication(user.get(), application.get());
 
-        if(param == null) {
+        if(!installation.isPresent() || !application.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(param, HttpStatus.OK);
+        Optional<Param> param = paramRepository.findByInstallationAndKey(installation.get(), key);
+
+        if(!param.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(PojoTransformer.getParamPojoFromParam(param.get()), HttpStatus.OK);
     }
 }
